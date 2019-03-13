@@ -1,0 +1,170 @@
+<link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="../iron-ajax/iron-ajax.html">
+<link rel="import" href="../iron-input/iron-input.html">
+<link rel="import" href="../paper-button/paper-button.html">
+<link rel="import" href="../paper-listbox/paper-listbox.html">
+<link rel="import" href="../paper-item/paper-item.html">
+<link rel="import" href="../paper-dialog/paper-dialog.html">
+<link rel="import" href="../paper-dialog-scrollable/paper-dialog-scrollable.html">
+
+<dom-module id="uvalib-sis-input">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+
+    </style>
+
+    <iron-ajax auto url="[[courseURL]]" last-response="{{courseData}}"></iron-ajax>
+<!--    <iron-ajax auto url="[[altCourseURL]]" last-response="[[altCourseData]]"></iron-ajax> -->
+
+    <paper-dialog modal>
+      <h2>Select a course section:</h2>
+      <paper-dialog-scrollable>
+        <paper-listbox selected="{{section}}" attr-for-selected="sec-id" on-selected-changed="_closeDialog">
+          <template is="dom-repeat" items="[[_sections]]">
+            <paper-item sec-id="[[item.classSection]]">
+              Section [[item.classSection]], [[item.meetingDays]], [[item.meetingStartTime]]-[[item.meetingEndTime]] ([[item.instructor]])
+            </paper-item>
+          </template>
+        </paper-listbox>
+      </paper-dialog-scrollable>
+      <div class="buttons">
+        <paper-button dialog-dismiss>Cancel</paper-button>
+      </div>
+    </paper-dialog>
+
+    <div id="termSelect">
+      <select id="term" value="{{term::change}}">
+        <option value="Fall" selected>Fall</option>
+        <option value="January">January</option>
+        <option value="Spring">Spring</option>
+        <option value="Summer I">Summer I</option>
+        <option value="Summer II">Summer II</option>
+        <option value="Summer III">Summer III</option>
+      </select>
+    </div>
+
+    <div id="courseSelect">
+      <div id="courseInput">
+        <label for="course">Course, e.g. MDST 3840</label>
+        <iron-input bind-value="{{course}}">
+          <input id="course">
+        </iron-input>
+      </div>
+      <div id="sectionInput">
+        <label for="section">Course section, e.g. 100</label>
+        <iron-input bind-value="{{section}}">
+          <input id="section">
+        </iron-input>
+      </div>
+    </div>
+
+<!--
+    <div id="altCourseSelect">
+      <div id="altCourseInput">
+        <label for="altCourse">Alternate course, e.g. DRAM 3840</label>
+        <input id="altCourse">
+      </div>
+      <div id="altSectionInput">
+        <label for="altSection">Alternate course section, e.g. 101</label>
+        <div id="altSection-container"></div>
+      </div>
+    </div>
+  -->
+
+    <div id="courseTitle">
+      <label for="courseTitle">Course title</label>
+      <iron-input bind-value="{{courseTitle}}">
+        <input id="courseTitle">
+      </iron-input>
+    </div>
+
+    <div id="courseEnrollment">
+      <label for="courseEnrollment">Enrollment</label>
+      <iron-input bind-value="{{courseEnrollment}}">
+        <input id="courseEnrollment">
+      </iron-input>
+    </div>
+
+  </template>
+
+  <script>
+    /**
+     * `uvalib-sis-input`
+     *
+     *
+     * @customElement
+     * @polymer
+     * @demo demo/index.html
+     */
+    class UvalibSisInput extends Polymer.Element {
+      static get is() { return 'uvalib-sis-input'; }
+      static get properties() {
+        return {
+          term: {
+            type: String,
+            value: 'Fall'
+          },
+          _sections: Array,
+          course: String,
+          courseURL: {
+            type: String,
+            computed: 'mkurl(term,course)'
+          },
+          courseTitle: String,
+          courseEnrollment: String,
+          courseData: {
+            type: Object,
+            observer: '_courseDataChanged'
+          },
+          section: {
+            type: String,
+            observer: '_sectionChanged'
+          },
+          value: {
+            type: Object,
+            computed: '_makeValue(section,courseEnrollment,courseTitle,course,term)',
+            reflectToAttribute: true,
+            notify: true
+          }
+        };
+      }
+      mkurl(term,course){
+        return (term && course)?
+          'https://api.library.virginia.edu/find_uva_course/cod.php?term='+term+'&mnemonic='+course:
+          null;
+      }
+      _makeValue(section,courseEnrollment,courseTitle,course,term){
+        return {
+          section: section,
+          enrollment: courseEnrollment,
+          title: courseTitle,
+          course: course,
+          term: term
+        }
+      }
+      _courseDataChanged(){
+        if (this.courseData && this.courseData.classSections && this.courseData.classSections.length>0) {
+          if (!this.courseTitle) this.courseTitle = this.courseData.classSections[0].classTitle;
+          if (!this.section) {
+            this._sections = this.courseData.classSections;
+            this.shadowRoot.querySelector('paper-dialog').open();
+          }
+        }
+      }
+      _sectionChanged(){
+        if (!this.courseEnrollment && this.section && this.courseData.classSections.length>0) {
+            const sec = this.courseData.classSections.find(s=>{return s.classSection == this.section});
+            if (sec && sec.enrollmentCapacity) this.courseEnrollment = sec.enrollmentCapacity;
+        }
+      }
+      _closeDialog(){
+        this.shadowRoot.querySelector('paper-dialog').close();
+      }
+    }
+
+    window.customElements.define(UvalibSisInput.is, UvalibSisInput);
+  </script>
+</dom-module>
