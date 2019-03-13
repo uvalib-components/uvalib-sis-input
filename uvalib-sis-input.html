@@ -35,6 +35,7 @@
       </div>
     </paper-dialog>
 
+    <label for="term">Term</label>
     <div id="termSelect">
       <select id="term" value="{{term::change}}">
         <option value="Fall" selected>Fall</option>
@@ -61,18 +62,20 @@
       </div>
     </div>
 
-<!--
     <div id="altCourseSelect">
       <div id="altCourseInput">
         <label for="altCourse">Alternate course, e.g. DRAM 3840</label>
-        <input id="altCourse">
+        <iron-input bind-value="{{altCourse}}">
+          <input id="altCourse">
+        </iron-input>
       </div>
       <div id="altSectionInput">
         <label for="altSection">Alternate course section, e.g. 101</label>
-        <div id="altSection-container"></div>
+        <iron-input bind-value="{{altSection}}">
+          <input id="altSection">
+        </iron-input>
       </div>
     </div>
-  -->
 
     <div id="courseTitle">
       <label for="courseTitle">Course title</label>
@@ -123,9 +126,11 @@
             type: String,
             observer: '_sectionChanged'
           },
+          altCourse: String,
+          altSection: String,
           value: {
             type: Object,
-            computed: '_makeValue(section,courseEnrollment,courseTitle,course,term)',
+            computed: '_makeValue(section,courseEnrollment,courseTitle,course,term,altCourse,altSection)',
             reflectToAttribute: true,
             notify: true
           }
@@ -136,13 +141,15 @@
           'https://api.library.virginia.edu/find_uva_course/cod.php?term='+term+'&mnemonic='+course:
           null;
       }
-      _makeValue(section,courseEnrollment,courseTitle,course,term){
+      _makeValue(section,courseEnrollment,courseTitle,course,term,altCourse,altSection){
         return {
           section: section,
           enrollment: courseEnrollment,
           title: courseTitle,
           course: course,
-          term: term
+          term: term,
+          altCourse: altCourse,
+          altSection: altSection
         }
       }
       _courseDataChanged(){
