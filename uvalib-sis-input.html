@@ -6,15 +6,18 @@
 <link rel="import" href="../paper-item/paper-item.html">
 <link rel="import" href="../paper-dialog/paper-dialog.html">
 <link rel="import" href="../paper-dialog-scrollable/paper-dialog-scrollable.html">
+<link rel="import" href="../uvalib-theme/uvalib-theme.html">
+<link rel="import" href="../uvalib-form-builder/uvalib-form-style.html">
 
 <dom-module id="uvalib-sis-input">
   <template>
-    <style>
+    <custom-style>
+      <style include="uvalib-theme uvalib-fonts uvalib-form-style">
       :host {
         display: block;
       }
 
-    </style>
+    </style></custom-style>
 
     <iron-ajax auto url="[[courseURL]]" last-response="{{courseData}}"></iron-ajax>
 <!--    <iron-ajax auto url="[[altCourseURL]]" last-response="[[altCourseData]]"></iron-ajax> -->
