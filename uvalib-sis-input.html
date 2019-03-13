@@ -155,9 +155,11 @@
       _courseDataChanged(){
         if (this.courseData && this.courseData.classSections && this.courseData.classSections.length>0) {
           if (!this.courseTitle) this.courseTitle = this.courseData.classSections[0].classTitle;
-          if (!this.section) {
+          if (!this.section && this.courseData.classSections.length>1) {
             this._sections = this.courseData.classSections;
             this.shadowRoot.querySelector('paper-dialog').open();
+          } else {
+            this.section = this.courseData.classSections[0].classSection;
           }
         }
       }
