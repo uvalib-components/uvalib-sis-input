@@ -1,4 +1,5 @@
 <link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="../uvalib-form-builder/uvalib-field.html">
 <link rel="import" href="../iron-ajax/iron-ajax.html">
 <link rel="import" href="../iron-input/iron-input.html">
 <link rel="import" href="../paper-button/paper-button.html">
@@ -20,7 +21,6 @@
     </style></custom-style>
 
     <iron-ajax auto url="[[courseURL]]" last-response="{{courseData}}"></iron-ajax>
-<!--    <iron-ajax auto url="[[altCourseURL]]" last-response="[[altCourseData]]"></iron-ajax> -->
 
     <paper-dialog modal>
       <h2>Select a course section:</h2>
@@ -38,7 +38,7 @@
       </div>
     </paper-dialog>
 
-    <label for="term">Term</label>
+    <label for="term">Term<template is="dom-if" if="[[required]]"><span class="required" aria-hidden="true">*</span><span class="hidden">required</span></template></label>
     <div id="termSelect">
       <select id="term" value="{{term::change}}">
         <option value="Fall" selected>Fall</option>
@@ -52,7 +52,7 @@
 
     <div id="courseSelect">
       <div id="courseInput">
-        <label for="course">Course, e.g. MDST 3840</label>
+        <label for="course">Course, e.g. MDST 3840<template is="dom-if" if="[[required]]"><span class="required" aria-hidden="true">*</span><span class="hidden">required</span></template></label>
         <iron-input bind-value="{{course}}">
           <input id="course">
         </iron-input>
@@ -105,10 +105,20 @@
      * @polymer
      * @demo demo/index.html
      */
-    class UvalibSisInput extends Polymer.Element {
+    class UvalibSisInput extends UvalibField(Polymer.Element) {
       static get is() { return 'uvalib-sis-input'; }
       static get properties() {
         return {
+          required: {
+            type: Boolean,
+            value: false,
+            reflectToAttribute: true
+          },
+          element: {
+            type: Object,
+            notify: true,
+            observer: '_elementChanged'
+          },
           term: {
             type: String,
             value: 'Fall'
@@ -138,6 +148,9 @@
             notify: true
           }
         };
+      }
+      _isRequired (element, required){
+        return super._isRequired(element) || this.required;
       }
       mkurl(term,course){
         return (term && course)?
@@ -174,6 +187,9 @@
       }
       _closeDialog(){
         this.shadowRoot.querySelector('paper-dialog').close();
+      }
+      _elementChanged(){
+        if (this.element && !this.required) this.required = this._isRequired(this.element);
       }
     }
 
