@@ -56,6 +56,7 @@
         <iron-input bind-value="{{course}}">
           <input id="course">
         </iron-input>
+        <div id="{{_ariaDescribedBy}}" class="uvalib-icon-exclamation-circle validation-message" hidden$="[[_hideMessage(invalidValues)]]"><span hidden="{{_syntaxInvalid}}">Please select the term and course mnemonic</span> <span hidden$="{{!_syntaxInvalid}}">[[element.syntax_error]]</span></div>
       </div>
       <div id="sectionInput">
         <label for="section">Course section, e.g. 100</label>
@@ -109,6 +110,11 @@
       static get is() { return 'uvalib-sis-input'; }
       static get properties() {
         return {
+          invalidValues: {
+            type: Boolean,
+            notify: true,
+            computed: '_isInvalid(term,course)'
+          },
           required: {
             type: Boolean,
             value: false,
@@ -117,7 +123,8 @@
           element: {
             type: Object,
             notify: true,
-            observer: '_elementChanged'
+            observer: '_elementChanged',
+            value: null
           },
           term: {
             type: String,
@@ -148,6 +155,22 @@
             notify: true
           }
         };
+      }
+      ready(){
+        super.ready();
+        console.log('sis is ready!!!')
+      }
+      _hideMessage(){
+        return this.element.valid;
+      }
+      focus() {
+        this.shadowRoot.querySelector('input').focus();
+      }
+      _isInvalid(){
+        const isit = !(this.term && this.course);
+//        this.set('element.valid', !(isit));
+        this.element.validated = !(isit);
+        return isit;
       }
       _isRequired (element, required){
         return super._isRequired(element) || this.required;
