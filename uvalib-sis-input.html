@@ -56,7 +56,7 @@
         <iron-input bind-value="{{course}}">
           <input id="course">
         </iron-input>
-        <div id="{{_ariaDescribedBy}}" class="uvalib-icon-exclamation-circle validation-message" hidden$="[[_hideMessage(invalidValues)]]"><span hidden="{{_syntaxInvalid}}">Please select the term and course mnemonic</span> <span hidden$="{{!_syntaxInvalid}}">[[element.syntax_error]]</span></div>
+        <div id="{{_ariaDescribedBy}}" class="uvalib-icon-exclamation-circle validation-message" hidden$="[[_hideMessage(counter)]]"><span hidden="{{_syntaxInvalid}}">[[element.required_error]]</span> <span hidden$="{{!_syntaxInvalid}}">[[element.syntax_error]]</span></div>
       </div>
       <div id="sectionInput">
         <label for="section">Course section, e.g. 100</label>
@@ -110,6 +110,7 @@
       static get is() { return 'uvalib-sis-input'; }
       static get properties() {
         return {
+          counter: Number,
           invalidValues: {
             type: Boolean,
             notify: true,
