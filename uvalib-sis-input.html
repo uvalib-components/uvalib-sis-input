@@ -22,7 +22,7 @@
 
     <iron-ajax auto url="[[courseURL]]" last-response="{{courseData}}"></iron-ajax>
 
-    <paper-dialog modal>
+    <paper-dialog with-backdrop>
       <h2>Select a course section:</h2>
       <paper-dialog-scrollable>
         <paper-listbox selected="{{section}}" attr-for-selected="sec-id" on-selected-changed="_closeDialog">
@@ -38,28 +38,30 @@
       </div>
     </paper-dialog>
 
-    <label for="term">Term<template is="dom-if" if="[[required]]"><span class="required" aria-hidden="true">*</span><span class="hidden">required</span></template></label>
-    <div id="termSelect">
-      <select id="term" value="{{term::change}}">
-        <option value="Fall" selected>Fall</option>
-        <option value="January">January</option>
-        <option value="Spring">Spring</option>
-        <option value="Summer I">Summer I</option>
-        <option value="Summer II">Summer II</option>
-        <option value="Summer III">Summer III</option>
-      </select>
+    <div class="form-field">
+      <label class="field-label" for="term">Term<template is="dom-if" if="[[required]]"><span class="required" aria-hidden="true">*</span><span class="hidden">required</span></template></label>
+      <div id="termSelect">
+        <select id="term" value="{{term::change}}">
+          <option value="Fall" selected>Fall</option>
+          <option value="January">January</option>
+          <option value="Spring">Spring</option>
+          <option value="Summer I">Summer I</option>
+          <option value="Summer II">Summer II</option>
+          <option value="Summer III">Summer III</option>
+        </select>
+      </div>
     </div>
 
     <div id="courseSelect">
-      <div id="courseInput">
-        <label for="course">Course, e.g. MDST 3840<template is="dom-if" if="[[required]]"><span class="required" aria-hidden="true">*</span><span class="hidden">required</span></template></label>
+      <div id="courseInput" class="form-field">
+        <label class="field-label" for="course">Course, e.g. MDST 3840<template is="dom-if" if="[[required]]"><span class="required" aria-hidden="true">*</span><span class="hidden">required</span></template></label>
         <iron-input bind-value="{{course}}">
           <input id="course">
         </iron-input>
         <div id="{{_ariaDescribedBy}}" class="uvalib-icon-exclamation-circle validation-message" hidden$="[[_hideMessage(counter)]]"><span hidden="{{_syntaxInvalid}}">[[element.required_error]]</span> <span hidden$="{{!_syntaxInvalid}}">[[element.syntax_error]]</span></div>
       </div>
-      <div id="sectionInput">
-        <label for="section">Course section, e.g. 100</label>
+      <div id="sectionInput" class="form-field">
+        <label class="field-label" for="section">Course section, e.g. 100</label>
         <iron-input bind-value="{{section}}">
           <input id="section">
         </iron-input>
@@ -67,29 +69,29 @@
     </div>
 
     <div id="altCourseSelect">
-      <div id="altCourseInput">
-        <label for="altCourse">Alternate course, e.g. DRAM 3840</label>
+      <div id="altCourseInput" class="form-field">
+        <label class="field-label" for="altCourse">Alternate course, e.g. DRAM 3840</label>
         <iron-input bind-value="{{altCourse}}">
           <input id="altCourse">
         </iron-input>
       </div>
-      <div id="altSectionInput">
-        <label for="altSection">Alternate course section, e.g. 101</label>
+      <div id="altSectionInput" class="form-field">
+        <label class="field-label" for="altSection">Alternate course section, e.g. 101</label>
         <iron-input bind-value="{{altSection}}">
           <input id="altSection">
         </iron-input>
       </div>
     </div>
 
-    <div id="courseTitle">
-      <label for="courseTitle">Course title</label>
+    <div id="courseTitle" class="form-field">
+      <label class="field-label" for="courseTitle">Course title</label>
       <iron-input bind-value="{{courseTitle}}">
         <input id="courseTitle">
       </iron-input>
     </div>
 
-    <div id="courseEnrollment">
-      <label for="courseEnrollment">Enrollment</label>
+    <div id="courseEnrollment" class="form-field">
+      <label class="field-label" for="courseEnrollment">Enrollment</label>
       <iron-input bind-value="{{courseEnrollment}}">
         <input id="courseEnrollment">
       </iron-input>
@@ -169,7 +171,6 @@
       }
       _isInvalid(){
         const isit = !(this.term && this.course);
-//        this.set('element.valid', !(isit));
         this.element.validated = !(isit);
         return isit;
       }
