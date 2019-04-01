@@ -161,7 +161,25 @@
       }
       ready(){
         super.ready();
-        console.log('sis is ready!!!')
+        this._initializeTerm();
+        console.log('sis is ready!!!');
+      }
+      _initializeTerm() {
+        // Use the current month to autoselect a default term/semester
+      	var today = new Date();
+      	// January thru April should have term set to Spring
+      	if ((0 <= today.getMonth()) && (today.getMonth() <= 3)) {
+          this.term = 'Spring';
+      	// May should have term set to Summer I
+      	} else if (today.getMonth() == 4) {
+          this.term = 'Summer I';
+      	// June thru November should have term set to Fall
+      	} else if ((5 <= today.getMonth()) && (today.getMonth() <= 10)) {
+          this.term = 'Fall';
+      	// December should have term set to Spring; NOT January
+      	} else if (today.getMonth() == 11) {
+          this.term = 'Spring';
+      	}
       }
       _hideMessage(){
         return this.element.valid;
@@ -212,6 +230,7 @@
       }
       _closeDialog(){
         this.shadowRoot.querySelector('paper-dialog').close();
+        this.focus(); // set focus to current input element
       }
       _elementChanged(){
         if (this.element && !this.required) this.required = this._isRequired(this.element);
