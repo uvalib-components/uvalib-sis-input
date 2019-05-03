@@ -77,6 +77,7 @@
       </div>
     </div>
 
+    <template is="dom-if" if="[[showAlternate]]">
     <div id="altCourseSelect">
       <div id="altCourseInput" class="form-field">
         <label class="field-label" for="altCourse">Alternate course, e.g. DRAM 3840</label>
@@ -91,6 +92,7 @@
         </iron-input>
       </div>
     </div>
+    </template>
 
     <div id="courseTitleInput" class="form-field">
       <label class="field-label" for="courseTitle">Course title</label>
@@ -157,6 +159,10 @@
           section: {
             type: String,
             observer: '_sectionChanged'
+          },
+          showAlternate: {
+            type: Boolean,
+            value: false
           },
           altCourse: String,
           altSection: String,
