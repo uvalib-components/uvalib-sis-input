@@ -101,12 +101,14 @@
       </iron-input>
     </div>
 
+    <template is="dom-if" if="[[showEnrollment]]">
     <div id="courseEnrollmentInput" class="form-field">
       <label class="field-label" for="courseEnrollment">Enrollment</label>
       <iron-input bind-value="{{courseEnrollment}}">
         <input id="courseEnrollment">
       </iron-input>
     </div>
+    </template>
 
   </template>
 
@@ -171,6 +173,10 @@
             computed: '_makeValue(section,courseEnrollment,courseTitle,course,term,altCourse,altSection)',
             reflectToAttribute: true,
             notify: true
+          },
+          showEnrollment: {
+            type: Boolean,
+            value: true
           }
         };
       }
