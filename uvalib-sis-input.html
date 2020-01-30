@@ -65,7 +65,7 @@
       <div id="courseInput" class="form-field">
         <label class="field-label" for="course">Course, e.g. MDST 3840<template is="dom-if" if="[[required]]"><span class="required" aria-hidden="true">*</span><span class="hidden">required</span></template></label>
         <iron-input bind-value="{{course}}">
-          <input id="course">
+          <input id="course" value="[[courseDefaultValue]]">
         </iron-input>
         <div id="{{_ariaDescribedBy}}" class="uvalib-icon-exclamation-circle validation-message" hidden$="[[_hideMessage(counter)]]"><span hidden="{{_syntaxInvalid}}">[[element.required_error]]</span> <span hidden$="{{!_syntaxInvalid}}">[[element.syntax_error]]</span></div>
       </div>
@@ -148,6 +148,10 @@
           },
           _sections: Array,
           course: String,
+          courseDefaultValue: {
+            type: String,
+            value: ''
+          },
           courseURL: {
             type: String,
             computed: 'mkurl(term,course)'
