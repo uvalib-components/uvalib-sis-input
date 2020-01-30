@@ -64,8 +64,8 @@
     <div id="courseSelect">
       <div id="courseInput" class="form-field">
         <label class="field-label" for="course">Course, e.g. MDST 3840<template is="dom-if" if="[[required]]"><span class="required" aria-hidden="true">*</span><span class="hidden">required</span></template></label>
-        <iron-input bind-value="{{course}}">
-          <input id="course" value="[[courseDefaultValue]]">
+        <iron-input bind-value="{{course}}" id="courseN">
+          <input id="course">
         </iron-input>
         <div id="{{_ariaDescribedBy}}" class="uvalib-icon-exclamation-circle validation-message" hidden$="[[_hideMessage(counter)]]"><span hidden="{{_syntaxInvalid}}">[[element.required_error]]</span> <span hidden$="{{!_syntaxInvalid}}">[[element.syntax_error]]</span></div>
       </div>
@@ -180,7 +180,7 @@
           },
           showEnrollment: {
             type: Boolean,
-            value: true
+            value: false
           }
         };
       }
@@ -188,6 +188,7 @@
         super.ready();
         this._initializeTerm();
         console.log('sis is ready!!!');
+        this.shadowRoot.querySelector('courseN').bindValue = this.courseDefaultValue;
       }
       _initializeTerm() {
         // Use the current month to autoselect a default term/semester
