@@ -147,7 +147,10 @@
             value: 'Fall'
           },
           _sections: Array,
-          course: String,
+          course: {
+            type: String,
+            observer: '_courseDefaultValueSet'
+          },
           courseDefaultValue: {
             type: String,
             value: ''
@@ -188,7 +191,6 @@
         super.ready();
         this._initializeTerm();
         console.log('sis is ready!!!');
-        this.shadowRoot.querySelector('#courseN').bindValue = this.courseDefaultValue;
       }
       _initializeTerm() {
         // Use the current month to autoselect a default term/semester
@@ -213,8 +215,8 @@
       focus() {
         this.shadowRoot.querySelector('input').focus();
       }
-      _isInvalid(){
-        const isit = !(this.term && this.course);
+      _isInvalid(term,course){
+        const isit = !(term && course);
         this.element.validated = !(isit);
         return isit;
       }
@@ -246,6 +248,12 @@
           } else {
             this.section = this.courseData.classSections[0].classSection;
           }
+        }
+      }
+      _courseDefaultValueSet() {
+        if (this.courseDefaultValue) {
+          this.course = this.courseDefaultValue;
+          this.shadowRoot.querySelector('#courseN').bindValue = this.courseDefaultValue;
         }
       }
       _sectionChanged(){
