@@ -101,6 +101,15 @@
       </iron-input>
     </div>
 
+    <template is="dom-if" if="[[showMeetingTime]]">
+    <div id="courseMeetingTimeInput" class="form-field">
+      <label class="field-label" for="courseMeetingTime">Meeting time</label>
+      <iron-input bind-value="{{courseMeetingTime}}">
+        <input id="courseMeetingTime">
+      </iron-input>
+    </div>
+    </template>
+
     <template is="dom-if" if="[[showEnrollment]]">
     <div id="courseEnrollmentInput" class="form-field">
       <label class="field-label" for="courseEnrollment">Enrollment</label>
@@ -161,6 +170,7 @@
           },
           courseTitle: String,
           courseEnrollment: String,
+          courseMeetingTime: String,
           courseData: {
             type: Object,
             observer: '_courseDataChanged'
@@ -177,9 +187,13 @@
           altSection: String,
           value: {
             type: Object,
-            computed: '_makeValue(section,courseEnrollment,courseTitle,course,term,altCourse,altSection)',
+            computed: '_makeValue(section,courseMeetingTime,courseEnrollment,courseTitle,course,term,altCourse,altSection)',
             reflectToAttribute: true,
             notify: true
+          },
+          showMeetingTime: {
+            type: Boolean,
+            value: false
           },
           showEnrollment: {
             type: Boolean,
@@ -228,9 +242,10 @@
           'https://api.library.virginia.edu/find_uva_course/cod.php?term='+term+'&mnemonic='+course:
           null;
       }
-      _makeValue(section,courseEnrollment,courseTitle,course,term,altCourse,altSection){
+      _makeValue(section,courseMeetingTime,courseEnrollment,courseTitle,course,term,altCourse,altSection){
         return {
           section: section,
+          meetingTime: courseMeetingTime,
           enrollment: courseEnrollment,
           title: courseTitle,
           course: course,
@@ -257,9 +272,10 @@
         }
       }
       _sectionChanged(){
-        if (!this.courseEnrollment && this.section && this.courseData.classSections.length>0) {
+        if ((!this.courseEnrollment || !this.courseMeetingTime) && this.section && this.courseData.classSections.length>0) {
             const sec = this.courseData.classSections.find(s=>{return s.classSection == this.section});
             if (sec && sec.enrollmentCapacity) this.courseEnrollment = sec.enrollmentCapacity;
+            if (sec && sec.meetingDays && sec.meetingStartTime && sec.meetingEndTime) this.courseMeetingTime = sec.meetingDays+' '+sec.meetingStartTime+'-'+sec.meetingEndTime;
         }
       }
       _closeDialog(){
