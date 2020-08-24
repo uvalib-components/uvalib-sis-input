@@ -274,6 +274,7 @@
       _sectionChanged(){
         if ((!this.courseEnrollment || !this.courseMeetingTime) && this.section && this.courseData.classSections.length>0) {
             const sec = this.courseData.classSections.find(s=>{return s.classSection == this.section});
+            if (sec && sec.classTitle) this.courseTitle = sec.classTitle;
             if (sec && sec.enrollmentCapacity) this.courseEnrollment = sec.enrollmentCapacity;
             if (sec && sec.meetingDays && sec.meetingStartTime && sec.meetingEndTime) this.courseMeetingTime = sec.meetingDays+' '+sec.meetingStartTime+'-'+sec.meetingEndTime;
         }
